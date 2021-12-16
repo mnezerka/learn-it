@@ -1,4 +1,4 @@
-import {get_random_int, shuffle_array} from "./utils.js"
+import {get_random_int, shuffle_array} from "../utils.js"
 
 function next() {
     let a = get_random_int(10);

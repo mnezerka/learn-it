@@ -2,7 +2,7 @@
     import LearningAnswers from "./LearningAnswers.svelte"
     import {sets_store} from "./stores.js"
     import {get_random_int, hash} from "./utils.js"
-    import { t } from "./i18n";
+    import {t} from "./i18n";
 
     let sets = []
     let answers_wrong = []
@@ -20,6 +20,7 @@
     let answers = [] 
     let answered = false
 
+    // generate new question
     function get_question() {
         let random_set_id = get_random_int(active_sets.length);
         let random_set = active_sets[random_set_id]
@@ -32,6 +33,7 @@
         get_question()
     }
 
+    // store all question to be able to list all answers
     function store_question(arr, q, answer) {
 
         // look for item by question and answer
@@ -58,18 +60,19 @@
         // if this is a first tip
         if (!answered) {
             answered = answer == question.a;
+        }
 
-            // remember both positive and negative answers
-            if (answer == question.a) {
-                if (!answers_correct.includes(question.q)) {
-                    answers_correct = store_question(answers_correct, question, answer)
-                }
-            } else {
-                if (!answers_wrong.includes(question.q)) {
-                    answers_wrong = store_question(answers_wrong, question, answer)
-                }
+        // remember both positive and negative answers
+        if (answer == question.a) {
+            if (!answers_correct.includes(question.q)) {
+                answers_correct = store_question(answers_correct, question, answer)
+            }
+        } else {
+            if (!answers_wrong.includes(question.q)) {
+                answers_wrong = store_question(answers_wrong, question, answer)
             }
         }
+
     }
 
     function on_next() {
@@ -106,16 +109,20 @@
 
 <div class="answers block">
     <div class="summary">
-        <span class="correct">{$t("answer.correct")}: {answers_correct.length}</span>
-        <span class="wrong">{$t("answer.wrong")}: {answers_wrong.length}</span>
+        <div class="correct">{$t("answer.correct")}: {answers_correct.length}</div>
+        <div class="wrong">{$t("answer.wrong")}: {answers_wrong.length}</div>
     </div>
+
+    <label>
+	    <input type=checkbox bind:checked={show_answers}>
+        {$t("answers.show")}
+    </label>
+
     {#if show_answers}
         <LearningAnswers answers={answers_wrong} />
-        <button on:click={() => show_answers = !show_answers }>Hide answers</button>
-
-    {:else}
-        <button on:click={() => show_answers = !show_answers }>Show answers</button>
     {/if}
+
+
 </div>
 
 <style>
@@ -143,11 +150,18 @@
         background-color: #ffaaaa;
     }
 
+    .question-next button:enabled {
+        background-color: #aaffaa;
+    }
+
     .answers .summary {
         font-size: 18px;
         margin-bottom: 20px;
     }
 
+    .answers .summary div {
+        padding: 5px;
+    }
     .answers .correct {
         color: #00cc00;
     }

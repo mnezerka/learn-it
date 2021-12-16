@@ -3,6 +3,7 @@
     import Learning from "./Learning.svelte"
     import Navbar from "./Navbar.svelte"
     import {sets_store} from "./stores.js"
+    import {t} from "./i18n";
 
     var sets = [];
 
@@ -16,9 +17,11 @@
 
     let learning = false;
 
+    /*
     $: if (active_sets.length > 0) {
         learning = true;
     }
+    */
 
     function on_start() {
         learning = true;
@@ -39,9 +42,8 @@
         <SetSelection />
         <button on:click|once={on_start} disabled={active_sets.length === 0}>Start</button>
     {:else}
-        <h3>Learning</h3>
         <Learning />
-        <button on:click|once={on_stop}>Stop</button>
+        <button on:click|once={on_stop}>{$t("nav.end")}</button>
     {/if}
 
 </main>
